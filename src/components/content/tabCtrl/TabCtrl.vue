@@ -21,6 +21,7 @@ export default {
   },
   methods: {
     changeCurrentId(index) {
+      console.log("进来了");
       this.currentId = index;
       this.$emit("changetabtitle", index);
     },

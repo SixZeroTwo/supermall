@@ -3,7 +3,12 @@
     <nav-bar class="home_nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll ref="scroll" class="wrapper" @scroll="changeTopShow">
+    <scroll
+      ref="scroll"
+      class="wrapper"
+      @pull-load="pullLoadHandler"
+      @scroll="changeTopShow"
+    >
       <div class="scroll-child">
         <home-swiper class="home-swiper" :banners="banners"></home-swiper>
         <home-recoms :recommends="recommends"></home-recoms>
@@ -77,6 +82,12 @@ export default {
       } else {
         this.topShow = false;
       }
+    },
+    pullLoadHandler(payload) {
+      console.log(payload);
+      this.getHomeGoods(this.cuurentTab).then(() => {
+        payload.done();
+      });
     },
     /*     网路请求相关方法
      */

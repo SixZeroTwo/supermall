@@ -3,6 +3,7 @@
     <vuescroll
       :ops="ops"
       ref="vuescroll"
+      @load-start="handleStart"
       @handle-scroll="handleScroll"
       class="vuescroll"
       ><slot></slot
@@ -11,33 +12,15 @@
 </template>
 <script>
 import vuescroll from "vuescroll";
-/* import BScroll from "@better-scroll/core";
-import Pullup from "@better-scroll/pull-up";
-BScroll.use(Pullup); */
 export default {
   name: "Scroll",
   mounted() {
     vuescroll.refreshAll();
   },
-  /*   mounted() {
-    this.$nextTick(() => {
-      this.scroll = new BScroll(this.$refs.wrapper, {
-        probeType: 3,
-        click: true,
-        //插件配置
-        pullUpload: true,
-      });
-      this.scroll.on("scroll", (position) => {
-        this.$emit("scroll", position);
-      });
-      //这里无法监听上拉事件，
-       this.scroll.on("pullingUp", () => {
-        console.log("pullUp");
-        this.scroll.finishPullUp();
-      }); 
-    }); 
-  },*/
   methods: {
+    handleStart(vm, refreshDom, done) {
+      this.$emit("pull-load", { refreshDom, done });
+    },
     //分割线
     handleScroll(vertical, horizontal, nativeEvent) {
       this.$emit("scroll", this.$refs["vuescroll"].getPosition().scrollTop);
@@ -61,7 +44,6 @@ export default {
       ops: {
         vuescroll: {
           mode: "slide", //移动端模式
-
           detectResize: true,
           /** 锁定一种滚动方向， 锁定的方向为水平或者垂直方向上滑动距离较大的那个方向 */
           locking: true,
@@ -93,12 +75,6 @@ export default {
             height: 100,
           },
           scroller: {
-            /*
-        Allow to scroll out of boundaries
-        true or false or an array specify which direction can be
-        bounced. The options can be:
-        ['top','bottom','left','right']
-      */
             bouncing: {
               top: 100,
               bottom: 100,
@@ -118,12 +94,15 @@ export default {
             /** This configures the amount of change applied to acceleration when reaching boundaries  **/
             penetrationAcceleration: 0.08,
             /** Whether call e.preventDefault event when sliding the content or not */
-            preventDefault: true,
+            preventDefault: false,
             /** Whether call preventDefault when (mouse/touch)move*/
             preventDefaultOnMove: true,
             // whether to  disable scroller or not.
             disable: false,
           },
+        },
+        bar: {
+          opacity: 0,
         },
       },
     };
