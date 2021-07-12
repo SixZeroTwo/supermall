@@ -4,15 +4,17 @@
       <div slot="center">购物街</div>
     </nav-bar>
     <scroll ref="scroll" class="wrapper" @scroll="changeTopShow">
-      <home-swiper class="home-swiper" :banners="banners"></home-swiper>
-      <home-recoms :recommends="recommends"></home-recoms>
-      <home-feature></home-feature>
-      <home-tab-ctrl
-        @changetabtitle="changeTabTitle"
-        ref="tab-ctrl"
-      ></home-tab-ctrl>
-      <goods-list :goods="goods[cuurentTab].list"></goods-list
-    ></scroll>
+      <div class="scroll-child">
+        <home-swiper class="home-swiper" :banners="banners"></home-swiper>
+        <home-recoms :recommends="recommends"></home-recoms>
+        <home-feature></home-feature>
+        <home-tab-ctrl
+          @changetabtitle="changeTabTitle"
+          ref="tab-ctrl"
+        ></home-tab-ctrl>
+        <goods-list :goods="goods[cuurentTab].list"></goods-list>
+      </div>
+    </scroll>
     <back-top @click.native="backToTop" v-show="topShow"></back-top>
   </div>
 </template>
@@ -64,14 +66,13 @@ export default {
     /*     事件请求相关方法
      */
     backToTop() {
-      console.log("回到顶部");
-      this.$refs.scroll.scrollTo(0, 0, 1000);
+      this.$refs.scroll.scrollTo(0, 0);
     },
     changeTabTitle(index) {
       this.cuurentTab = this.Tabs[index];
     },
     changeTopShow(position) {
-      if (position.y < -2000) {
+      if (position > 2000) {
         this.topShow = true;
       } else {
         this.topShow = false;
